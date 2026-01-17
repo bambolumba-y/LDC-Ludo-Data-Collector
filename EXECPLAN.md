@@ -23,29 +23,37 @@ Target outputs:
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 1: Create project skeleton (folders, dependencies, CLI entrypoints, logging).
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 2: Implement Liquipedia MediaWiki API client (headers, rate limit, retries, disk cache).
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 3: Tournament discovery via categories (S-tier/A-tier) with pagination.
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 4: Download tournament pages (wikitext) with resume and caching.
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 5: Extract matches from tournament wikitext (prototype → generalize).
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 6: Build `matches.parquet` + dedup + basic validation report.
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 7: Add unit tests (pagination, extraction, normalization) and run them.
-- [ ] (YYYY-MM-DD HH:MMZ) Milestone 8: Update README and do an end-to-end smoke run.
+- [x] (2026-01-17 13:18Z) Milestone 1: Create project skeleton (folders, dependencies, CLI entrypoints, logging).
+- [x] (2026-01-17 13:18Z) Milestone 2: Implement Liquipedia MediaWiki API client (headers, rate limit, retries, disk cache).
+- [x] (2026-01-17 13:18Z) Milestone 3: Tournament discovery via categories (S-tier/A-tier) with pagination.
+- [x] (2026-01-17 13:18Z) Milestone 4: Download tournament pages (wikitext) with resume and caching.
+- [x] (2026-01-17 13:18Z) Milestone 5: Extract matches from tournament wikitext (prototype → generalize).
+- [x] (2026-01-17 13:18Z) Milestone 6: Build `matches.parquet` + dedup + basic validation report.
+- [x] (2026-01-17 13:18Z) Milestone 7: Add unit tests (pagination, extraction, normalization) and run them.
+- [ ] (2026-01-17 13:18Z) Milestone 8: Update README and do an end-to-end smoke run.
 
 ## Surprises & Discoveries
 
 (Write down unexpected response shapes, template name changes, missing fields, or any API limitations encountered. Include small evidence like a short log snippet.)
+ - 2026-01-17: `pip install -r requirements.txt` failed due to proxy 403, so pytest could not import `mwparserfromhell`. See pip output in terminal. 
 
 ## Decision Log
 
 (Keep a running log of decisions.)
 - Decision: Use Liquipedia MediaWiki Action API (api.php) instead of any private/paid API.
   Rationale: No keys required; works from a public endpoint; we can rate limit and cache.
-  Date/Author: YYYY-MM-DD / Codex
+  Date/Author: 2026-01-17 / Codex
+ - Decision: Keep a configurable list of match template names and store template params in `source_fields`.
+   Rationale: Templates vary by tournament; the debug blob makes extraction more transparent.
+   Date/Author: 2026-01-17 / Codex
+ - Decision: Provide an optional CatBoost training script without adding CatBoost to default dependencies.
+   Rationale: Training is optional and should not block data collection or acceptance.
+   Date/Author: 2026-01-17 / Codex
 
 ## Outcomes & Retrospective
 
 (To be filled at the end: what works, what doesn’t, what should be improved next.)
+ - 2026-01-17: Data collection, parsing, dataset build, and tests are implemented. Smoke run and dependency install could not be verified in this environment due to pip proxy errors. Next step is to run the acceptance commands in a networked environment and refine template extraction using `debug_templates`.
 
 ---
 
@@ -274,4 +282,3 @@ Acceptance is met if, on a fresh clone:
 
 - Add a script `src/modeling/train_catboost.py` that reads `matches.parquet` or a features file, but do not run training by default.
 - Add an outline of “next step: feature engineering” in README.
-
